@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="org.zooma.cameraoverlay"
+        version="0.1.0">
+<name>CameraOverlay</name>
+<description>CameraOverlay Plugin</description>
+<license>MIT</license>
+<author>T-Man</author>
+<keywords>phonegap,camera, overlay</keywords>
+
+	<js-module src="www/CameraOverlay.js" name="CameraOverlay">
+    	<clobbers target="window.plugins.CameraOverlay" />
+	</js-module>
+
+	<!-- iOS -->
+	<platform name="ios">
+		<!-- ios-specific elements -->
+		<header-file src="src/ios/CameraOverlay.h" />
+		<source-file src="src/ios/CameraOverlay.m" />
+		<header-file src="src/ios/CameraOverlayViewController.h" />
+		<source-file src="src/ios/CameraOverlayViewController.m" />
+		<header-file src="src/ios/MBProgressHUD.h" />
+		<source-file src="src/ios/MBProgressHUD.m" />
+		<header-file src="src/ios/UIImage+Resize.h" />
+		<source-file src="src/ios/UIImage+Resize.m" />
+		
+		<resource-file src="src/ios/CameraOverlayViewController.xib" />
+		<resource-file src="src/ios/close-button.png" />
+		<resource-file src="src/ios/close-button2@x.png" />
+		<resource-file src="src/ios/help-button.png" />
+		<resource-file src="src/ios/help-button@2x.png" />
+		<resource-file src="src/ios/okay-button.png" />
+		<resource-file src="src/ios/okay-button@2x.png" />		
+	</platform>
+</plugin>
