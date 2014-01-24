@@ -15,6 +15,12 @@
 
 	<!-- iOS -->
 	<platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="CameraOverlay">
+                <param name="ios-package" value="CameraOverlay"/>
+            </feature>
+        </config-file>
+        
 		<!-- ios-specific elements -->
 		<header-file src="src/ios/CameraOverlay.h" />
 		<source-file src="src/ios/CameraOverlay.m" />
