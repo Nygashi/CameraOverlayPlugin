@@ -185,4 +185,4 @@ var cordovaRef = window.PhoneGap || window.Cordova || window.cordova; // old to 
  
 })();
 
-module.exports = CameraOverlay;
+// module.exports = CameraOverlay;
