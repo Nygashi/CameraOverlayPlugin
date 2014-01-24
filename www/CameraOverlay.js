@@ -1,17 +1,12 @@
 
     var CameraOverlay = function() {
-        console.log('CameraOverlay:: Defining vars');
         CameraOverlay.oParams = {};
         CameraOverlay.fotoDict = '';
     };
 
 
     CameraOverlay.prototype.showCamera = function() {
-        alert('TEST');
-        console.log('First line');
-
         success = function(fotoDict){
-            console.log('SUCCESS CALLBACK CAMERASTARTUP');
         	if(fotoDict.state == 'CANCELLED'){
         		return;
         	}
@@ -97,8 +92,6 @@
         CameraOverlay.oParams.lng                  = GeoLocation.lng;
         CameraOverlay.oParams.error                = GeoLocation.error;
 
-
-
         console.log(CameraOverlay.oParams);
         CameraOverlay.uploadData();
     };
@@ -110,10 +103,8 @@
         var db_user_id = JSON.parse(window.localStorage.getItem("db_user_id"));
         console.log('CameraOverlay uploaddata for dbuserID: '+db_user_id);
         var sUrl = PeaceMaker.mediaUploadUrl + 'uploadimage.php?';
-//        sUrl += "db_user_id=" + window.localStorage.getItem("db_user_id");
         sUrl += "db_user_id=" + db_user_id;
         sUrl += "&key=" + PeaceMaker.apiKey;
-
 
         console.log('SURL UPLOAD:: '+sUrl);
         // De alertview wordt native aangeroepen
@@ -131,7 +122,6 @@
         Filecommunication.uploadUrl                 = sUrl;
         Filecommunication.params                    = CameraOverlay.oParams;
         Filecommunication.uploadFile();
-  
     };
  
     CameraOverlay.prototype.onSuccessFilecommunication = function(sMessage) {
@@ -150,11 +140,9 @@
         if(!PeaceMaker.connected){
            CameraOverlay.showAlert();
         }
-        console.log('Filecommunication oError.code = ' + oError.code + ' sMessage = ' + sMessage);
 
         // Verberg de native loading message
         return cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
-
     };
 
     CameraOverlay.prototype.showAlert =function(){
@@ -166,10 +154,7 @@
     }
 
     if (!window.plugins.CameraOverlay) {
-        console.log('SETTING CAMERAOVERLAY INSTANCE!');
         window.plugins.CameraOverlay = new CameraOverlay();
-        console.log(''+window.plugins.CameraOverlay)     ;
-        console.log(''+CameraOverlay)     ;
     }
     if (module.exports) {
         module.exports = new CameraOverlay();
