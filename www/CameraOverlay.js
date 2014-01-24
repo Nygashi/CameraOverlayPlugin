@@ -172,6 +172,6 @@
         console.log(''+CameraOverlay)     ;
     }
     if (module.exports) {
-        module.exports = CameraOverlay;
+        module.exports = new CameraOverlay();
     }
 
