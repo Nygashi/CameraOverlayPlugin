@@ -1,31 +1,36 @@
-
+cordova.define("org.zooma.cameraoverlay.CameraOverlay", function(require, exports, module) {
     var CameraOverlay = function() {
-        CameraOverlay.oParams = {};
-        CameraOverlay.fotoDict = '';
+        CameraOverlay.prototype.oParams = {};
+        CameraOverlay.prototype.fotoDict = '';
     };
 
 
     CameraOverlay.prototype.showCamera = function() {
+
         success = function(fotoDict){
+
+            console.log('Success Callback.');
         	if(fotoDict.state == 'CANCELLED'){
         		return;
         	}
-            CameraOverlay.fotoDict = fotoDict;
+
+            CameraOverlay.prototype.fotoDict = fotoDict;
+
             //Check connection, else show alertview
             if(PeaceMaker.connected){
-                CameraOverlay.prepareUploadPhoto();
+                console.log('Connected - Preparing upload...');
+                CameraOverlay.prototype.prepareUploadPhoto();
             }else{
                 if(PeaceMaker.deviceOS == 'iOS'){
-                    CameraOverlay.showAlert();
+                    CameraOverlay.prototype.showAlert();
                     cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
                 }else{
-                    CameraOverlay.prepareUploadPhoto();
+                    CameraOverlay.prototype.prepareUploadPhoto();
                 }
             }
-
-            CameraOverlay.refreshCallbackId(); 
-
+            CameraOverlay.prototype.refreshCallbackId();
         };
+
         fail = function(){
             console.log('FAIL CALLBACK CAMERASTARTUP');
             console.log('failure');
@@ -36,26 +41,25 @@
 
     CameraOverlay.prototype.refreshCallbackId = function() {
         success = function(fotoDict){
-            console.log('SUCCESS CALLBACK REFRESH')
         	if(fotoDict.state == 'CANCELLED'){
         		return;
         	}
             console.log('refreshCallbackId success');
- 
-            CameraOverlay.fotoDict = fotoDict;
+
+            CameraOverlay.prototype.fotoDict = fotoDict;
 
             if(PeaceMaker.connected){
-                CameraOverlay.prepareUploadPhoto();
+                CameraOverlay.prototype.prepareUploadPhoto();
             }else{
                 if(PeaceMaker.deviceOS == 'iOS'){
-                    CameraOverlay.showAlert();
+                    CameraOverlay.prototype.showAlert();
                     cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
                 }else{
-                    CameraOverlay.prepareUploadPhoto();
+                    CameraOverlay.prototype.prepareUploadPhoto();
                 }
             }
- 
-            CameraOverlay.refreshCallbackId();
+
+            CameraOverlay.prototype.refreshCallbackId();
         };
         fail = function(){
             console.log('FAIL CALLBACK REFRESH');
@@ -68,8 +72,9 @@
 
     // Geo lat lng erbij ophalen
     CameraOverlay.prototype.prepareUploadPhoto = function() {
-
-        GeoLocation.init(CameraOverlay.onSuccessGeoLocation, CameraOverlay.onErrorGeoLocation);
+        console.log('Initting Geolocation');
+        GeoLocation.init(CameraOverlay.prototype.onSuccessGeoLocation, CameraOverlay.prototype.onErrorGeoLocation);
+        console.log('Getting current position');
         GeoLocation.getCurrentPosition();
     };
 
@@ -78,9 +83,9 @@
         console.log('CameraOverlay.onErrorGeoLocation');
 
         // Add geo error
-        CameraOverlay.oParams.error                = GeoLocation.error;
+        CameraOverlay.prototype.oParams.error                = GeoLocation.error;
 
-        CameraOverlay.uploadData();
+        CameraOverlay.prototype.uploadData();
     };
 
     CameraOverlay.prototype.onSuccessGeoLocation = function() {
@@ -88,12 +93,13 @@
         console.log('CameraOverlay.onSuccessGeoLocation');
 
         // Add geo
-        CameraOverlay.oParams.lat                  = GeoLocation.lat;
-        CameraOverlay.oParams.lng                  = GeoLocation.lng;
-        CameraOverlay.oParams.error                = GeoLocation.error;
+        CameraOverlay.prototype.oParams.lat                  = GeoLocation.lat;
+        CameraOverlay.prototype.oParams.lng                  = GeoLocation.lng;
+        CameraOverlay.prototype.oParams.error                = GeoLocation.error;
 
         console.log(CameraOverlay.oParams);
-        CameraOverlay.uploadData();
+        console.log('Ready to upload data..');
+        CameraOverlay.prototype.uploadData();
     };
 
  
@@ -110,17 +116,21 @@
         // De alertview wordt native aangeroepen
 
         // Key + device info
-        CameraOverlay.oParams.key                   = PeaceMaker.uploadKey;
-        CameraOverlay.oParams.devicePlatform        = PeaceMaker.devicePlatform;
-        CameraOverlay.oParams.deviceVersion         = PeaceMaker.deviceVersion;
-        CameraOverlay.oParams.deviceOS              = PeaceMaker.deviceOS;
-        CameraOverlay.oParams.state                 = CameraOverlay.fotoDict.state;
+        CameraOverlay.prototype.oParams.key                   = PeaceMaker.uploadKey;
+        CameraOverlay.prototype.oParams.devicePlatform        = PeaceMaker.devicePlatform;
+        CameraOverlay.prototype.oParams.deviceVersion         = PeaceMaker.deviceVersion;
+        CameraOverlay.prototype.oParams.deviceOS              = PeaceMaker.deviceOS;
+        CameraOverlay.prototype.oParams.state                 = CameraOverlay.prototype.fotoDict.state;
+
+        console.log('oParams filled.. continueing filecommunication..');
 
         // Start uploading
-        Filecommunication.init(CameraOverlay.onSuccessFilecommunication, CameraOverlay.onErrorFilecommunication);
-        Filecommunication.fileURI                   = CameraOverlay.fotoDict.uri;
+        Filecommunication.init(CameraOverlay.prototype.onSuccessFilecommunication, CameraOverlay.prototype.onErrorFilecommunication);
+        Filecommunication.fileURI                   = CameraOverlay.prototype.fotoDict.uri;
         Filecommunication.uploadUrl                 = sUrl;
-        Filecommunication.params                    = CameraOverlay.oParams;
+        Filecommunication.params                    = CameraOverlay.prototype.oParams;
+
+        console.log('Uploading file..');
         Filecommunication.uploadFile();
     };
  
@@ -129,7 +139,7 @@
         console.log('CameraOverlay.onSuccessFilecommunication = ' + sMessage);
 
         if(!PeaceMaker.connected){
-            CameraOverlay.showAlert();
+            CameraOverlay.prototype.showAlert();
         }
 
         // Verberg de native loading message
@@ -138,7 +148,7 @@
  
     CameraOverlay.prototype.onErrorFilecommunication = function(oError, sMessage) {
         if(!PeaceMaker.connected){
-           CameraOverlay.showAlert();
+            CameraOverlay.prototype.showAlert();
         }
 
         // Verberg de native loading message
@@ -160,3 +170,4 @@
         module.exports = new CameraOverlay();
     }
 
+});
