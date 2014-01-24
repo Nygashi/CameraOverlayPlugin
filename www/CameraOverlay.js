@@ -1,4 +1,3 @@
-cordova.define("org.zooma.cameraoverlay.CameraOverlay", function(require, exports, module) {
     var CameraOverlay = function() {
         CameraOverlay.prototype.oParams = {};
         CameraOverlay.prototype.fotoDict = '';
@@ -169,5 +168,3 @@ cordova.define("org.zooma.cameraoverlay.CameraOverlay", function(require, export
     if (module.exports) {
         module.exports = new CameraOverlay();
     }
-
-});
