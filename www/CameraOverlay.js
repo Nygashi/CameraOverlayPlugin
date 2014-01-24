@@ -1,12 +1,15 @@
 
     var CameraOverlay = function() {
-        CameraOverlay.oParams = {},
-        CameraOverlay.fotoDict = '' 
-    }; 
+        console.log('CameraOverlay:: Defining vars');
+        CameraOverlay.oParams = {};
+        CameraOverlay.fotoDict = '';
+    };
 
- 
+
     CameraOverlay.prototype.showCamera = function() {
- 
+        alert('TEST');
+        console.log('First line');
+
         success = function(fotoDict){
             console.log('SUCCESS CALLBACK CAMERASTARTUP');
         	if(fotoDict.state == 'CANCELLED'){
@@ -19,7 +22,7 @@
             }else{
                 if(PeaceMaker.deviceOS == 'iOS'){
                     CameraOverlay.showAlert();
-                    cordovaRef.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
+                    cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
                 }else{
                     CameraOverlay.prepareUploadPhoto();
                 }
@@ -51,7 +54,7 @@
             }else{
                 if(PeaceMaker.deviceOS == 'iOS'){
                     CameraOverlay.showAlert();
-                    cordovaRef.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
+                    cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
                 }else{
                     CameraOverlay.prepareUploadPhoto();
                 }
@@ -69,13 +72,13 @@
 
 
     // Geo lat lng erbij ophalen
-    CameraOverlay.prepareUploadPhoto = function() {
+    CameraOverlay.prototype.prepareUploadPhoto = function() {
 
         GeoLocation.init(CameraOverlay.onSuccessGeoLocation, CameraOverlay.onErrorGeoLocation);
         GeoLocation.getCurrentPosition();
     };
 
-    CameraOverlay.onErrorGeoLocation = function() {
+    CameraOverlay.prototype.onErrorGeoLocation = function() {
 
         console.log('CameraOverlay.onErrorGeoLocation');
 
@@ -85,7 +88,7 @@
         CameraOverlay.uploadData();
     };
 
-    CameraOverlay.onSuccessGeoLocation = function() {
+    CameraOverlay.prototype.onSuccessGeoLocation = function() {
 
         console.log('CameraOverlay.onSuccessGeoLocation');
 
@@ -103,7 +106,7 @@
  
  
     // Handle foto versturen naar server
-    CameraOverlay.uploadData = function() {
+    CameraOverlay.prototype.uploadData = function() {
         var db_user_id = JSON.parse(window.localStorage.getItem("db_user_id"));
         console.log('CameraOverlay uploaddata for dbuserID: '+db_user_id);
         var sUrl = PeaceMaker.mediaUploadUrl + 'uploadimage.php?';
@@ -131,7 +134,7 @@
   
     };
  
-    CameraOverlay.onSuccessFilecommunication = function(sMessage) {
+    CameraOverlay.prototype.onSuccessFilecommunication = function(sMessage) {
 
         console.log('CameraOverlay.onSuccessFilecommunication = ' + sMessage);
 
@@ -140,10 +143,10 @@
         }
 
         // Verberg de native loading message
-        return cordovaRef.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
+        return cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
     };
  
-    CameraOverlay.onErrorFilecommunication = function(oError, sMessage) {
+    CameraOverlay.prototype.onErrorFilecommunication = function(oError, sMessage) {
         if(!PeaceMaker.connected){
            CameraOverlay.showAlert();
         }
@@ -154,18 +157,21 @@
 
     };
 
-    CameraOverlay.showAlert =function(){
+    CameraOverlay.prototype.showAlert =function(){
         Alertview.alert("No network", "This app needs a working network connection. Check the network connection and try again.");
     };
 
-    if (!window.plugins) window.plugins = {};
+    if (!window.plugins) {
+        window.plugins = {};
+    }
 
     if (!window.plugins.CameraOverlay) {
-        window.plugins.CameraOverlay = new CameraOverlay()
+        console.log('SETTING CAMERAOVERLAY INSTANCE!');
+        window.plugins.CameraOverlay = new CameraOverlay();
+        console.log(''+window.plugins.CameraOverlay)     ;
+        console.log(''+CameraOverlay)     ;
     }
     if (module.exports) {
         module.exports = CameraOverlay;
     }
-
-
 
