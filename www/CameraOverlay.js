@@ -23,7 +23,7 @@
                 }
             }
 
-            window.plugins.CameraOverlay.refreshCallbackId(); 
+            CameraOverlay.refreshCallbackId(); 
 
         };
         fail = function(){
@@ -55,7 +55,7 @@
                 }
             }
  
-            window.plugins.CameraOverlay.refreshCallbackId();
+            CameraOverlay.refreshCallbackId();
         };
         fail = function(){
             console.log('FAIL CALLBACK REFRESH');
