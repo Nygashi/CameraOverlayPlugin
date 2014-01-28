@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="https://github.com/Nygashi/CameraOverlayPlugin.git"
-        id="org.zooma.cameraoverlay"
+        id="com.zooma.plugins.cameraoverlay"
         version="0.1.0">
 <name>CameraOverlay</name>
 <description>CameraOverlay Plugin</description>
