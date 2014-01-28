@@ -18,7 +18,7 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="CameraOverlay">
-                <param name="android-package" value="com.zooma.plugins.cameraoverlay"/>
+                <param name="android-package" value="com.zooma.plugins.cameraoverlay.CameraOverlay"/>
             </feature>
         </config-file>
         
