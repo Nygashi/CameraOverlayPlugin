@@ -32,7 +32,7 @@
         <resource-file src="src/android/help_button.png" target-dir="res/drawable" />
         <resource-file src="src/android/okay_button.png" target-dir="res/drawable" />
         
-        <config-file target="AndroidManifest.xml" parent="/*">
+        <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.CAMERA" />
         </config-file>
 
