@@ -13,6 +13,31 @@
     	<clobbers target="window.plugins.CameraOverlay" />
 	</js-module>
 
+
+    <!-- Android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="CameraOverlay">
+                <param name="android-package" value="com.zooma.plugins.cameraoverlay"/>
+            </feature>
+        </config-file>
+        
+		<!-- android-specific elements -->
+        <source-file src="src/android/CameraActivity.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
+        <source-file src="src/android/CameraOverlay.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
+        <source-file src="src/android/CameraPreview.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
+        
+        <resource-file src="src/android/camerapreview.xml" target-dir="res/layout" />
+        <resource-file src="src/android/close_button.png" target-dir="res/drawable" />
+        <resource-file src="src/android/help_button.png" target-dir="res/drawable" />
+        <resource-file src="src/android/okay_button.png" target-dir="res/drawable" />
+        
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.CAMERA" />
+        </config-file>
+
+	</platform>
+
 	<!-- iOS -->
 	<platform name="ios">
         <config-file target="config.xml" parent="/*">
