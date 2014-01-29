@@ -1,7 +1,10 @@
 package com.zooma.plugins.cameraoverlay;
 
-import org.apache.cordova.api.Plugin;
-import org.apache.cordova.api.PluginResult;
+//import org.apache.cordova.api.Plugin;
+//import org.apache.cordova.api.PluginResult;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,10 +20,11 @@ import android.content.Intent;
  * This class echoes a string called from JavaScript.
  */
 @SuppressWarnings("deprecation")
-public class CameraOverlay extends Plugin {
+public class CameraOverlay extends CordovaPlugin {
 	protected static final String TAG = "CameraOverlay plugin (CameraOverlay)";
     private String callbackId;
 	private ProgressDialog mProgressDialog;
+	private CallbackContext currentCallbackContext;
 
 	/**
      * Executes the request and returns PluginResult.
@@ -30,17 +34,26 @@ public class CameraOverlay extends Plugin {
      * @param callbackId    The callback id used when calling back into JavaScript.
      * @return              A PluginResult object with a status and message.
      */
-    public PluginResult execute(String action, JSONArray args, String callbackId) {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
     	Log.d(TAG, "plugin working");
     	Log.i(TAG, "action = " + action);
+    	
+    	this.currentCallbackContext = callbackContext;
+    	
     	try {
     		Log.i(TAG, action);
             if (action.equals("echo")) {
                 String echo = args.getString(0); 
                 if (echo != null && echo.length() > 0) { 
-                    return new PluginResult(PluginResult.Status.OK, echo);
+                	PluginResult result = new PluginResult(PluginResult.Status.OK, echo);
+                    callbackContext.sendPluginResult(result);
+                    return true;
+//                    return new  PluginResult(PluginResult.Status.OK, e.getMessage());
                 } else {
-                    return new PluginResult(PluginResult.Status.ERROR);
+                	PluginResult result = new PluginResult(PluginResult.Status.ERROR);
+                    callbackContext.sendPluginResult(result);
+                    return false;
+//                    return new PluginResult(PluginResult.Status.ERROR);
                 }
             }else if (action.equals("showCamera")){
             	//todo, write the codes yo
@@ -54,16 +67,19 @@ public class CameraOverlay extends Plugin {
                 cordova.startActivityForResult(this, intent, CameraActivity.CAMERA_ACTIVITY_RESULT);
                 //or cordova.getActivity().startActivity(intent);
                 PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
-                this.callbackId = callbackId;
+                this.callbackId = callbackContext.getCallbackId();
                 r.setKeepCallback(true);
-                return r;
+//                return r;
+                return true;
             } 
             else if (action.equals("refreshCallBackId")){
             	Log.i(TAG, "refreshCallBackId");
                 PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
-                this.callbackId = callbackId;
+                this.callbackId = callbackContext.getCallbackId();
                 r.setKeepCallback(true);
-                return r;
+//                return r;
+                callbackContext.sendPluginResult(r);
+                return true;
             }
             else if(action.equals("hideActivityLoader")){
             	Log.i(TAG, "hideActivityLoader");
@@ -76,19 +92,27 @@ public class CameraOverlay extends Plugin {
                 cordova.startActivityForResult(this, camIntent, CameraActivity.CAMERA_ACTIVITY_RESULT);
                 PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
                 //this.callbackId = callbackId;
-                //r.setKeepCallback(true);                
-                return r;            	
+                //r.setKeepCallback(true);
+                callbackContext.sendPluginResult(r);
+                return true;
+//                return r;            	
             }
     	    else {
-                return new PluginResult(PluginResult.Status.INVALID_ACTION);
-                
+    	    	PluginResult result = new PluginResult(PluginResult.Status.INVALID_ACTION);
+                callbackContext.sendPluginResult(result);
+    	    	return false;
+//                return new PluginResult(PluginResult.Status.INVALID_ACTION);   
             }
         } catch (JSONException e) {
         	PluginResult result = new PluginResult(PluginResult.Status.JSON_EXCEPTION);
         	Log.e("Snapcamera Plugin", e.getMessage());
-            return result;
+        	callbackContext.sendPluginResult(result);
+        	return false;
+//            return result;
         }
     }
+    
+
     
     /**
      * Called when the intent completes
@@ -116,11 +140,17 @@ public class CameraOverlay extends Plugin {
 					jsonResult.put("state", state);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					this.error(new PluginResult(PluginResult.Status.ERROR, e.getMessage()), this.callbackId);
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR , this.callbackId);
+					this.currentCallbackContext.sendPluginResult(pluginResult);
+					
+//					this.error(new PluginResult(PluginResult.Status.ERROR, e.getMessage()), this.callbackId);
 				}
 
                 // -----------------------
-                this.success(new PluginResult(PluginResult.Status.OK, jsonResult), this.callbackId);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
+				this.currentCallbackContext.sendPluginResult(pluginResult);
+				
+//                this.success(new PluginResult(PluginResult.Status.OK, jsonResult), this.callbackId);
                 
             } else if (resultCode == Activity.RESULT_CANCELED) {
             	JSONObject jsonResult = new JSONObject();
@@ -129,11 +159,17 @@ public class CameraOverlay extends Plugin {
 					jsonResult.put("state", "CANCELLED");
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					this.error(new PluginResult(PluginResult.Status.ERROR, e.getMessage()), this.callbackId);
+					 PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, this.callbackId);
+					this.currentCallbackContext.sendPluginResult(pluginResult);
+//					this.error(new PluginResult(PluginResult.Status.ERROR, e.getMessage()), this.callbackId);
 				}            	
-                this.success(new PluginResult(PluginResult.Status.OK, jsonResult), this.callbackId);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonResult);
+       			this.currentCallbackContext.sendPluginResult(pluginResult);
+//                this.success(new PluginResult(PluginResult.Status.OK, jsonResult), this.callbackId);
             } else {
-                this.error(new PluginResult(PluginResult.Status.ERROR), this.callbackId);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, this.callbackId);
+       			this.currentCallbackContext.sendPluginResult(pluginResult);
+//                this.error(new PluginResult(PluginResult.Status.ERROR), this.callbackId);
             }
         }
     }
