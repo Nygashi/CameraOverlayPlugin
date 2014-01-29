@@ -27,14 +27,14 @@
         <source-file src="src/android/CameraOverlay.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
         <source-file src="src/android/CameraPreview.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
         
-        <resource-file src="src/android/camerapreview.xml" target-dir="res/layout" />
+        <!-- <resource-file src="src/android/camerapreview.xml" target-dir="res/layout" />
         <resource-file src="src/android/close_button.png" target-dir="res/drawable" />
         <resource-file src="src/android/help_button.png" target-dir="res/drawable" />
-        <resource-file src="src/android/okay_button.png" target-dir="res/drawable" />
+        <resource-file src="src/android/okay_button.png" target-dir="res/drawable" /> -->
         
-        <config-file target="AndroidManifest.xml" parent="/manifest">
+        <!-- <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.CAMERA" />
-        </config-file>
+        </config-file> -->
 
 	</platform>
 
