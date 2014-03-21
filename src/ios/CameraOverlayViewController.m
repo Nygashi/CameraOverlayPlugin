@@ -20,6 +20,8 @@
 @synthesize cameraOverlayView;
 @synthesize buttonID;
 @synthesize helpButton, okayButton, blueBackground;
+@synthesize animationEnabled;
+
 
 - (void)viewDidLoad
 {
@@ -32,10 +34,12 @@
     
     if( screenHeight == 568.0){
         //iPhone5 img
-        self.helpButton.frame       = CGRectMake(self.helpButton.frame.origin.x, 495, self.helpButton.frame.size.width, self.helpButton.frame.size.height);
-        self.okayButton.frame       = CGRectMake(self.okayButton.frame.origin.x, 495, self.helpButton.frame.size.width, self.helpButton.frame.size.height);
+        self.helpButton.frame       = CGRectMake(self.helpButton.frame.origin.x, 483, self.helpButton.frame.size.width, self.helpButton.frame.size.height);
+        self.okayButton.frame       = CGRectMake(self.okayButton.frame.origin.x, 483, self.helpButton.frame.size.width, self.helpButton.frame.size.height);
         self.blueBackground.frame   = CGRectMake(self.blueBackground.frame.origin.x, 470, self.blueBackground.frame.size.width, self.blueBackground.frame.size.height);
     }
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -44,6 +48,11 @@
 
     [self setupcamera];
 
+}
+
+- (void)navigationController:(UINavigationController *)navigationController     willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 -(void)setupcamera{
@@ -58,10 +67,13 @@
         imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
         
         imagePicker.cameraOverlayView = cameraOverlayView;
+        imagePicker.cameraViewTransform = CGAffineTransformMakeScale(1, 1.03);
+        
         
         [self.cameraOverlayView setHidden:NO];
         
-        [self presentModalViewController:self.imagePicker animated:YES];
+        [self presentModalViewController:self.imagePicker animated:animationEnabled];
+
 
     }
 }
@@ -117,12 +129,16 @@
         [UIImageJPEGRepresentation(scaledImage, 0.4) writeToFile:imagePath atomically:YES];
         
         NSString *imageURL = [NSString stringWithFormat:@"%@",[NSURL fileURLWithPath:imagePath] ];
+
 //        NSLog(@"PATH: %@", imageURL);
-        if ([self.delegate respondsToSelector:@selector(didSavePictureWithFileURL:andButtonID:)]) {
-            
-                [self.delegate didSavePictureWithFileURL:imageURL andButtonID:self.buttonID];
-            }
+        if ([self.delegate respondsToSelector:@selector(didFinishTakingPhotoWithImage:buttonID:andFileURL:)]) {
+
+            [self.delegate didFinishTakingPhotoWithImage:scaledImage buttonID:self.buttonID andFileURL:imageURL];
+        }
+        
     }
+    
+    
 }
 
 

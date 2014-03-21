@@ -11,9 +11,9 @@
 
 @protocol CameraOverlayViewControllerDelegate <NSObject>
 
-- (void)didSavePictureWithFileURL:(NSString *)fileURL andButtonID:(NSInteger)buttonID;
 - (void)didPressDismissCamera;
 - (void)showActivityLoader;
+- (void)didFinishTakingPhotoWithImage:(UIImage *)image buttonID:(NSInteger)buttonID andFileURL:(NSString *)fileURL;
 
 @end
 
@@ -36,8 +36,12 @@
 @property (nonatomic, strong) IBOutlet UIButton* helpButton;
 @property (nonatomic, strong) IBOutlet UIButton* okayButton;
 @property (nonatomic, strong) IBOutlet UIView* blueBackground;
+@property (weak, nonatomic) IBOutlet UIImageView *previewImageView;
+@property (weak, nonatomic) IBOutlet UIView *imagePreviewView;
 
 @property (nonatomic, unsafe_unretained) id <CameraOverlayViewControllerDelegate> delegate;
+
+@property BOOL animationEnabled;
 
 - (IBAction)helpButtonPressed:(id)sender;
 - (IBAction)okayButtonPressed:(id)sender;

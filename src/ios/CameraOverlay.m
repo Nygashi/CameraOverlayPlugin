@@ -13,26 +13,25 @@
 @synthesize callbackId;
 @synthesize loaderCallbackId;
 @synthesize HUD;
-
+@synthesize cameraOverlayViewController;
 
 
 #pragma mark Cordova Calls
 - (void)showCamera:(CDVInvokedUrlCommand *)command
 {
-    
-//    NSLog(@"command %@", command);
     self.callbackId = command.callbackId;
     
-    CameraOverlayViewController *camview = [[CameraOverlayViewController alloc]initWithNibName:@"CameraOverlayViewController" bundle:nil];
-    camview.delegate = self;
-    [self.viewController presentModalViewController:camview animated:NO];
+    self.cameraOverlayViewController = [[CameraOverlayViewController alloc]initWithNibName:@"CameraOverlayViewController" bundle:nil];
+    self.cameraOverlayViewController.delegate = self;
+    self.cameraOverlayViewController.animationEnabled = YES;
+    [self.viewController presentModalViewController:cameraOverlayViewController animated:self.cameraOverlayViewController.animationEnabled];
 
 }
 - (void)hideActivityLoader:(CDVInvokedUrlCommand *)command{
     
     self.loaderCallbackId = command.callbackId;
-   
-    [self.HUD hide:YES];
+    
+    [self.confirmViewController setNewUploadStatus:@"Finished uploading!"];
 }
 
 //Gets called when a picture is taken, so we can use the callback again
@@ -43,8 +42,7 @@
 
 -(void)successWithMessage:(NSDictionary *)messageDict;
 {
-//    [self.HUD hide:YES];
-    
+
     CDVPluginResult* pluginResult = nil;
  
     if (messageDict != nil && [messageDict count] > 0) {
@@ -54,12 +52,26 @@
     }
   
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
-        
 }
 
 #pragma mark CameraOverlayViewController Delegate Methods
-- (void)didSavePictureWithFileURL:(NSString *)fileURL andButtonID:(NSInteger)buttonID{
+- (void)didPressDismissCamera{
+    [self.viewController dismissModalViewControllerAnimated:YES];
+}
 
+
+- (void)didFinishTakingPhotoWithImage:(UIImage *)image buttonID:(NSInteger)buttonID andFileURL:(NSString *)fileURL{
+
+    [self.HUD hide:YES];
+    //Present preview view
+    [self.viewController dismissModalViewControllerAnimated:NO];
+
+    self.confirmViewController = [[ConfirmViewController alloc]initWithNibName:@"ConfirmViewController" image:image bundle:nil];
+    self.confirmViewController.delegate = self;
+    [self.viewController presentModalViewController:self.confirmViewController animated:NO];
+   
+    
+    //Upload picture
     NSString *keyName = nil;
     if (buttonID == 0) {
         keyName = @"okay";
@@ -67,17 +79,8 @@
         keyName = @"help";
     }
     
-    //NSDictionary *messageDict = [[NSDictionary alloc]initWithObjectsAndKeys:fileURL ,keyName, nil];
     NSDictionary *messageDict = [[NSDictionary alloc]initWithObjectsAndKeys:fileURL, @"uri", keyName, @"state", nil];
-    
-//    NSLog(@"messageDict %@", messageDict);
-    
     [self successWithMessage:messageDict];
-
-
-}
-- (void)didPressDismissCamera{
-    [self.viewController dismissModalViewControllerAnimated:YES];
 }
 
 -(void)showActivityLoader{
@@ -89,10 +92,18 @@
     [self.viewController.view bringSubviewToFront:HUD];
 	
 	HUD.delegate = self;
-	HUD.labelText = @"Sending photo...";
+	HUD.labelText = @"Taking picture...";
 	
 	// myProgressTask uses the HUD instance to update progress
 	[HUD show:YES];
+}
+
+#pragma mark ConfirmOverlay Delegate
+-(void)didPressContinue{
+
+    [self.confirmViewController dismissModalViewControllerAnimated:NO];
+    self.cameraOverlayViewController.animationEnabled = NO;
+    [self.viewController presentModalViewController:self.cameraOverlayViewController animated:NO];
     
 }
 
