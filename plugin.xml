@@ -63,17 +63,22 @@
 		<source-file src="src/ios/CameraOverlay.m" />
 		<header-file src="src/ios/CameraOverlayViewController.h" />
 		<source-file src="src/ios/CameraOverlayViewController.m" />
+        <header-file src="src/ios/ConfirmViewController" />
+		<source-file src="src/ios/ConfirmViewController" />
 		<header-file src="src/ios/MBProgressHUD.h" />
 		<source-file src="src/ios/MBProgressHUD.m" />
 		<header-file src="src/ios/UIImage+Resize.h" />
 		<source-file src="src/ios/UIImage+Resize.m" />
 		
 		<resource-file src="src/ios/CameraOverlayViewController.xib" />
+		<resource-file src="src/ios/ConfirmViewController.xib" />
 		<resource-file src="src/ios/close-button.png" />
 		<resource-file src="src/ios/close-button2@x.png" />
 		<resource-file src="src/ios/help-button.png" />
 		<resource-file src="src/ios/help-button@2x.png" />
 		<resource-file src="src/ios/okay-button.png" />
-		<resource-file src="src/ios/okay-button@2x.png" />		
+		<resource-file src="src/ios/okay-button@2x.png" />
+        <resource-file src="src/ios/continue-button.png" />
+		<resource-file src="src/ios/continue-button@2x.png" />
 	</platform>
 </plugin>
