@@ -28,7 +28,7 @@ public class ConfirmActivity extends Activity {
 		
 		Log.d("Debug", "ConfirmActivity started!");
 		Intent receivedIntent = getIntent();
-		String imagePath = receivedIntent.getStringExtra("ImagePath");
+		String imagePath = receivedIntent.getStringExtra("ImageFile");
 		Log.d("Debug", "Received image path : "+ imagePath);
 		
 		Bitmap bitmap;
@@ -71,15 +71,4 @@ public class ConfirmActivity extends Activity {
 	        Log.w("TAG", "-- OOM Error in setting image");
 	    }
 	}
-	
-//	@Override
-//	public void onBackPressed() {
-//		// TODO Auto-generated method stub
-//		super.onBackPressed();
-//		Log.d("Debug", "Back Pressed, Sending OK Result...");
-//        Intent resultIntent = new Intent();
-//        ConfirmActivity.this.setResult(Activity.RESULT_OK, resultIntent);
-//		
-//		finish();
-//	}
 }

@@ -1,4 +1,4 @@
-    var CameraOverlay = function() {
+cordova.define("com.zooma.plugins.cameraoverlay.CameraOverlay", function(require, exports, module) {    var CameraOverlay = function() {
         CameraOverlay.prototype.oParams = {};
         CameraOverlay.prototype.fotoDict = '';
     };
@@ -27,7 +27,7 @@
                     CameraOverlay.prototype.prepareUploadPhoto();
                 }
             }
-            CameraOverlay.prototype.refreshCallbackId();
+//            CameraOverlay.prototype.refreshCallbackId();
         };
 
         fail = function(){
@@ -141,8 +141,15 @@
             CameraOverlay.prototype.showAlert();
         }
 
+        success = function(){
+            CameraOverlay.prototype.showCamera();
+        };
+        fail = function(){
+            CameraOverlay.prototype.showCamera();
+        };
+
         // Verberg de native loading message
-        return cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
+        return cordova.exec(success, fail, "CameraOverlay", "hideActivityLoader",[]);
     };
  
     CameraOverlay.prototype.onErrorFilecommunication = function(oError, sMessage) {
@@ -150,8 +157,16 @@
             CameraOverlay.prototype.showAlert();
         }
 
+        success = function(){
+            CameraOverlay.prototype.showCamera();
+        };
+        fail = function(){
+            CameraOverlay.prototype.showCamera();
+        };
+
+
         // Verberg de native loading message
-        return cordova.exec(null, null, "CameraOverlay", "hideActivityLoader",[]);
+        return cordova.exec(success, fail, "CameraOverlay", "hideActivityLoader",[]);
     };
 
     CameraOverlay.prototype.showAlert =function(){
@@ -167,4 +182,4 @@
     }
     if (module.exports) {
         module.exports = new CameraOverlay();
-    }
+    }});

@@ -26,7 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 public class CameraActivity extends Activity {
-    protected static final String TAG = "CameraOverlay plugin (CameraActivity)";
+    protected static final String TAG = "Debug";
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 	private Camera mCamera;
@@ -71,6 +71,7 @@ public class CameraActivity extends Activity {
                 Intent resultIntent = new Intent();
                 Log.d(TAG, "URI : " + "file://" + pictureFile.getPath());
                 resultIntent.putExtra("ImageURI", "file://" + pictureFile.getPath());
+                resultIntent.putExtra("ImageFile", pictureFile.getPath());
                 resultIntent.putExtra("State", CameraActivity.this.state);
                 setResult(Activity.RESULT_OK, resultIntent);
                 Log.d(TAG, "file size = " + pictureFile.length());
