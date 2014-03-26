@@ -19,19 +19,24 @@
 #pragma mark Cordova Calls
 - (void)showCamera:(CDVInvokedUrlCommand *)command
 {
+    NSLog(@"SHOW CAMERA CALLED!");
     self.callbackId = command.callbackId;
     
-    self.cameraOverlayViewController = [[CameraOverlayViewController alloc]initWithNibName:@"CameraOverlayViewController" bundle:nil];
-    self.cameraOverlayViewController.delegate = self;
-    self.cameraOverlayViewController.animationEnabled = YES;
-    [self.viewController presentModalViewController:cameraOverlayViewController animated:self.cameraOverlayViewController.animationEnabled];
-
+    if (cameraOverlayViewController == nil) {
+        self.cameraOverlayViewController = [[CameraOverlayViewController alloc]initWithNibName:@"CameraOverlayViewController" bundle:nil];
+        self.cameraOverlayViewController.delegate = self;
+        self.cameraOverlayViewController.animationEnabled = YES;
+        [self.viewController presentModalViewController:cameraOverlayViewController animated:self.cameraOverlayViewController.animationEnabled];
+    }
 }
 - (void)hideActivityLoader:(CDVInvokedUrlCommand *)command{
     
     self.loaderCallbackId = command.callbackId;
     
     [self.confirmViewController setNewUploadStatus:@"Finished uploading!"];
+    
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.loaderCallbackId];
 }
 
 //Gets called when a picture is taken, so we can use the callback again
@@ -56,6 +61,7 @@
 
 #pragma mark CameraOverlayViewController Delegate Methods
 - (void)didPressDismissCamera{
+    self.cameraOverlayViewController = nil;
     [self.viewController dismissModalViewControllerAnimated:YES];
 }
 
