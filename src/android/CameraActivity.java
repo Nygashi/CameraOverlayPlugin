@@ -180,15 +180,19 @@ public class CameraActivity extends Activity {
             	}
                 Log.i("PictureSize", "Supported Size: " +sizes.get(i).width + "height : " + sizes.get(i).height);
             }
+            
             params.set("jpeg-quality", 50);
             params.setPictureFormat(PixelFormat.JPEG);
             params.setPictureSize(w, h);
             params.setRotation(90);
+            
             c.setParameters(params);
         }
         catch (Exception e){
             // Camera is not available (in use or does not exist)
+        	Log.d("Debug", "CameraActivity : error "+e);
         }
+        Log.d("Debug", "CameraActivity : Returning "+c);
         return c; // returns null if camera is unavailable
     }
     

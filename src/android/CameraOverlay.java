@@ -49,7 +49,7 @@ public class CameraOverlay extends CordovaPlugin {
             cordova.setActivityResultCallback(CameraOverlay.this); 
             cordova.startActivityForResult(this, intent, CameraActivity.CAMERA_ACTIVITY_RESULT);
 
-
+//            currentCallbackContext.success();
             return true;
         } 
         else if(action.equals("hideActivityLoader")){
