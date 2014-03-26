@@ -26,9 +26,11 @@
         <source-file src="src/android/CameraActivity.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
         <source-file src="src/android/CameraOverlay.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
         <source-file src="src/android/CameraPreview.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
+        <source-file src="src/android/ConfirmActivity.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
         
         <source-file src="src/android/camerapreview.xml" target-dir="res/layout" />
         <source-file src="src/android/camerastrings.xml" target-dir="res/values" />
+        <source-file src="src/android/activity_confirm.xml" target-dir="res/values" />
 
         <source-file src="src/android/close_button.png" target-dir="res/drawable" />
         <source-file src="src/android/help_button.png" target-dir="res/drawable" />
@@ -40,6 +42,14 @@
         
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.zooma.plugins.cameraoverlay.CameraActivity"
+                android:label="@string/app_name"
+                android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
+            </activity>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.zooma.plugins.cameraoverlay.ConfirmActivity"
                 android:label="@string/app_name"
                 android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
                 android:configChanges="orientation"
