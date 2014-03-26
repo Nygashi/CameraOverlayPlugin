@@ -53,7 +53,7 @@
                 android:configChanges="orientation"
                 android:screenOrientation="portrait">
             </activity>
-        </config-file
+        </config-file>
 	</platform>
 
 	<!-- iOS -->
