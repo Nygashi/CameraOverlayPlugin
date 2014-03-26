@@ -29,9 +29,9 @@
         <source-file src="src/android/ConfirmActivity.java" target-dir="src/com/zooma/plugins/cameraoverlay" />
         
         <source-file src="src/android/camerapreview.xml" target-dir="res/layout" />
+        <source-file src="src/android/activity_confirm.xml" target-dir="res/layout" />
         <source-file src="src/android/camerastrings.xml" target-dir="res/values" />
-        <source-file src="src/android/activity_confirm.xml" target-dir="res/values" />
-
+        
         <source-file src="src/android/close_button.png" target-dir="res/drawable" />
         <source-file src="src/android/help_button.png" target-dir="res/drawable" />
         <source-file src="src/android/okay_button.png" target-dir="res/drawable" />
