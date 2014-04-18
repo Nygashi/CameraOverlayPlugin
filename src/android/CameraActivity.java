@@ -1,5 +1,6 @@
 package com.zooma.plugins.cameraoverlay;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,22 +9,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.zooma.peacemaker.R;
-import com.zooma.peacemaker.R.id;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+
+import com.zooma.peacemaker.R;
+import com.zooma.peacemaker.R.id;
 
 public class CameraActivity extends Activity {
     protected static final String TAG = "Debug";
@@ -39,11 +44,10 @@ public class CameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.i("SnapCamera plugin","Camera activity onCreate");
         setContentView(R.layout.camerapreview);
-
+        
         // Create an instance of Camera
         mCamera = getCameraInstance();
     
-        
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
@@ -53,21 +57,45 @@ public class CameraActivity extends Activity {
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+            	
                 File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
                 if (pictureFile == null){
                     Log.d(TAG, "Error creating media file, check storage permissions");
                     return;
                 }
+                
                 try {
+                	
+                	byte[] pictureBytes;
+                	Bitmap thePicture = BitmapFactory.decodeByteArray(data, 0, data.length);
+                	
+                	Log.d("Debug", "Picture height: "+thePicture.getHeight());
+                	Log.d("Debug", "Picture width: "+thePicture.getWidth());
+                	
+                	Matrix m = new Matrix();
+                	if(thePicture.getWidth() > thePicture.getHeight()){	
+	                	m.postRotate(90);
+                	}else{
+                		m.postRotate(0);
+                	}
+                	
+                	thePicture = Bitmap.createBitmap(thePicture, 0, 0, thePicture.getWidth(), thePicture.getHeight(), m, true);
+
+                	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                	thePicture.compress(CompressFormat.JPEG, 100, bos);
+                	pictureBytes = bos.toByteArray();
+                	
 					FileOutputStream fos = new FileOutputStream(pictureFile);
-                    fos.write(data);
-                    Log.d(TAG, data.length+  " written");
+					fos.write(pictureBytes);
+                    Log.d(TAG, pictureBytes.length+  " written");
                     fos.close();
+					
                 } catch (FileNotFoundException e) {
                     Log.d(TAG, "File not found: " + e.getMessage());
                 } catch (IOException e) {
                     Log.d(TAG, "Error accessing file: " + e.getMessage());
                 }
+
                 Intent resultIntent = new Intent();
                 Log.d(TAG, "URI : " + "file://" + pictureFile.getPath());
                 resultIntent.putExtra("ImageURI", "file://" + pictureFile.getPath());
@@ -78,8 +106,7 @@ public class CameraActivity extends Activity {
                 finish();
             }
         };
-        
-        
+                
         ImageButton imokButton = (ImageButton) findViewById(id.button_noworries);
         ImageButton closeButton = (ImageButton) findViewById(id.button_close);
         ImageButton helpButton = (ImageButton) findViewById(id.button_help);
@@ -118,6 +145,15 @@ public class CameraActivity extends Activity {
         );
     }
 
+    
+    
+    private static int exifToDegrees(int exifOrientation) {        
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; } 
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; } 
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }            
+        return 0;    
+     }
+    
     //Release camera, else it will crash or get stuck.
     @Override
 	protected void onDestroy() {
@@ -189,12 +225,12 @@ public class CameraActivity extends Activity {
             	}
                 Log.i("PictureSize", "Supported Size: " +sizes.get(i).width + "height : " + sizes.get(i).height);
             }
-            
+
             params.set("jpeg-quality", 50);
             params.setPictureFormat(PixelFormat.JPEG);
             params.setPictureSize(w, h);
             params.setRotation(90);
-            
+              
             c.setParameters(params);
         }
         catch (Exception e){
