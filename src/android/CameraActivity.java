@@ -118,16 +118,25 @@ public class CameraActivity extends Activity {
         );
     }
 
-    
-    
+    //Release camera, else it will crash or get stuck.
     @Override
 	protected void onDestroy() {
-    	mCamera.release();
-		// TODO Auto-generated method stub
-		super.onDestroy();
+    	
+        releaseCamera();
+        super.onDestroy();
 	}
-
-
+    
+    @Override
+	protected void onResume() {
+    	super.onResume();
+    };
+    
+    @Override
+    protected void onPause() {
+    	// TODO Auto-generated method stub
+    	super.onPause();
+        releaseCamera();
+    }
 
 	/** Create a File for saving an image or video */
     private static File getOutputMediaFile(int type){
@@ -196,5 +205,11 @@ public class CameraActivity extends Activity {
         return c; // returns null if camera is unavailable
     }
     
-    
+    private void releaseCamera(){
+        if (mCamera != null){
+            mCamera.stopPreview();
+            mCamera.release();        // release the camera for other applications
+            mCamera = null;
+        }
+    }
 }
